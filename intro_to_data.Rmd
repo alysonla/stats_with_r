@@ -242,22 +242,23 @@ this data frame as `sfo_feb_flights`. How many flights meet these criteria?
 
 ```{r sfo-feb-flights}
 # type your code for Question 1 here, and Knit
-
+dim(sfo_feb_flights)
 ```
 
 
 2. Make a histogram and calculate appropriate summary statistics for **arrival**
 delays of `sfo_feb_flights`. Which of the following is false?
-<ol>
-<li> The distribution is unimodal. </li>
-<li> The distribution is right skewed. </li>
-<li> No flight is delayed more than 2 hours. </li>
-<li> The distribution has several extreme values on the right side. </li>
-<li> More than 50% of flights arrive on time or earlier than scheduled. </li>
-</ol>
+
+1. The distribution is unimodal.
+2. The distribution is right skewed. 
+3. No flight is delayed more than 2 hours. 
+4. The distribution has several extreme values on the right side. 
+5. More than 50% of flights arrive on time or earlier than scheduled. 
+
 
 ```{r sfo-feb-flights-arrival-delays}
 # type your code for Question 2 here, and Knit
+ggplot(data = sfo_feb_flights, aes(x = arr_delay)) +  geom_histogram()
 
 ```
 
@@ -288,7 +289,9 @@ IQR of arrival delays?
 
 ```{r sfo-feb-flights-arrival-delays-carrier}
 # type your code for Question 3 here, and Knit
-
+sfo_feb_flights %>%
+   group_by(carrier) %>%
+   summarise(mean_dd = mean(dep_delay), IQR_dd = IQR(dep_delay), n = n())
 ```
 
 ### Departure delays over months
@@ -323,6 +326,7 @@ nycflights %>%
 ```{r highest-avg-dep-delay-month}
 # type your code for Question 4 here, and Knit
 
+
 ```
 
 
@@ -337,7 +341,10 @@ nycflights %>%
 
 ```{r highest-median-dep-delay-month}
 # type your code for Question 5 here, and Knit
-
+nycflights %>%
+   group_by(month) %>%
+   summarise(median_dd = median(dep_delay)) %>%
+   arrange(desc(median_dd))
 ```
 
 
@@ -450,6 +457,8 @@ Google this tail number to find out more about the aircraft.
 
 ```{r fastest-avg-speed-tailnum}
 # type your code for Question 8 here, and Knit
+nycflights <- nycflights %>%
+  mutate(avg_speed = distance / air_time)
 
 ```
 
@@ -466,7 +475,10 @@ about the relationship between average speed and distance.
 
 ```{r avg-speed-dist-scatter}
 # type your code for Question 9 here, and Knit
-
+nycflights <- nycflights %>%
+mutate(avg_speed = distance / air_time) 
+ggplot(data = nycflights, aes(x = avg_speed, y = distance)) +
+  geom_point()
 ```
 
 
@@ -480,5 +492,5 @@ were `"delayed"` departing arrive `"on time"`?
 
 ```{r on-time-arr-perc}
 # type your code for Question 10 here, and Knit
-
+nycflights <- nycflights %>% mutate(arr_type = ifelse(arr_delay < 1, "on time", "delayed"))
 ```
